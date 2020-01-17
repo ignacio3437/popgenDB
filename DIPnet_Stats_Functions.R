@@ -324,7 +324,7 @@ pairwise.structure.mtDNA.db<-function(ipdb=ipdb, gdist = c("Nei GST", "Hedrick G
     sp<-subset(ipdb, Genus_species_locus == gsl )
     sp$sample<-paste(sp$locality,round(sp$decimalLatitude, digits=0),round(sp$decimalLongitude, digits=0),sep="_")  #sets up a variable that matches assignsamp function outcome
     sp<-sp[order(sp$sample),]
-    
+        
     #this code is not currently necessary given the sp$sample field above may come in handy when we start using ecoregions etc.
     #create a set of unique samples, as denoted by lat+long+pi, and sort it alphabetically. 
     #This is because the genind object will return things in alphaetical order, so we want to be on the same page with it
@@ -339,11 +339,11 @@ pairwise.structure.mtDNA.db<-function(ipdb=ipdb, gdist = c("Nei GST", "Hedrick G
     lowsamps<-names(sampN[sampN < minseqs])
     if(length(lowsamps)>0){sp<-sp[-which(sp[[regionalization]] %in% lowsamps),]}
     if(length(sampN) - length(lowsamps) < minsamps){all.pops.table[[gsl]]<-paste("Fewer than", minsamps, "sampled populations after filtering. No stats calculated")
-    paste("Fewer than", minsamps, "sampled populations after filtering. No stats calculated")
-    next}
+                                                    paste("Fewer than", minsamps, "sampled populations after filtering. No stats calculated")
+                                                    next}
     if(length(sp[,1])<mintotalseqs){all.pops.table[[gsl]]<-paste("fewer than",mintotalseqs,"samples left after filtering. No stats calculated")
-    cat("fewer than",mintotalseqs,"samples left after filtering. No stats calculated")
-    next}
+                                   cat("fewer than",mintotalseqs,"samples left after filtering. No stats calculated")
+                                   next}
     cat("Removed the following population samples:", lowsamps, "\n")
     
     #FORMAT CONVERSION
@@ -377,17 +377,17 @@ pairwise.structure.mtDNA.db<-function(ipdb=ipdb, gdist = c("Nei GST", "Hedrick G
     
     #DIFFERENTIATION STATS CALCULATION
     cat("Calculating", gdist)
-    
-    
+
+      
     #Nei's Gst (Nei 1973, Nei and Chesser 1983) - mmod package
     if(gdist=="Nei GST"){
-      diffs<-pairwise_Gst_Nei(spseqs.genind)
-    }
-    
+        diffs<-pairwise_Gst_Nei(spseqs.genind)
+      }
+        
     #Hedrick's G'st (Hedrick 2005) mmod package
     if(gdist=="Hedrick G'ST"){
-      diffs<-pairwise_Gst_Hedrick(spseqs.genind)
-    }
+        diffs<-pairwise_Gst_Hedrick(spseqs.genind)
+      }
     
     #Jost's D (Jost 2008) - mmod package
     if(gdist=="Jost D"){
@@ -401,7 +401,7 @@ pairwise.structure.mtDNA.db<-function(ipdb=ipdb, gdist = c("Nei GST", "Hedrick G
       diffs<-as.dist(pairwise$pair.mat$PHIst)
     }
     
-    #Weir-Cockerhams (1984) theta - StrataG package (also commented code for hierfstat package - results are the same)
+     #Weir-Cockerhams (1984) theta - StrataG package (also commented code for hierfstat package - results are the same)
     if(gdist=="WC Theta"){
       pairwise<-pairwiseTest(seq.gtype,stats="fst",nrep=nrep,num.cores=num.cores,quietly=T)
       pairwise$pair.mat$Fst[upper.tri(pairwise$pair.mat$Fst)]<-0
@@ -428,7 +428,7 @@ pairwise.structure.mtDNA.db<-function(ipdb=ipdb, gdist = c("Nei GST", "Hedrick G
     all.pops.table[[gsl]]<-diffs
     
   }
-  return(all.pops.table)
+return(all.pops.table)
 }
 
 
@@ -451,7 +451,7 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
   require(adegenet)
   require(pegas)
   
-  
+
   ##Code to figure out the number of levels in the analysis
   if(is.null(level1)){stop("You must enter at least one level - try using 'sample'")}
   if(is.null(level2) && is.null(level3)){level<-1}
@@ -494,14 +494,14 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
     lowsamps<-names(sampN[sampN < minseqs])
     if(length(lowsamps)>0){sp<-sp[-which(sp[[l1]] %in% lowsamps),]}
     if(length(sampN) - length(lowsamps) < minsamps){all.pops.table[[gsl]]<-paste("fewer than", minsamps, "sampled populations after filtering. No stats calculated")
-    cat("Fewer than", minsamps, "sampled populations after filtering. No stats calculated")
-    next}
+                                                    cat("Fewer than", minsamps, "sampled populations after filtering. No stats calculated")
+                                                    next}
     if(length(sp[,1])<mintotalseqs){all.pops.table[[gsl]]<-paste("fewer than",mintotalseqs,"samples left after filtering. No stats calculated")
-    cat("fewer than",mintotalseqs,"samples left after filtering. No stats calculated")
-    next}
+                                    cat("fewer than",mintotalseqs,"samples left after filtering. No stats calculated")
+                                    next}
     cat("Removed the following population samples:", lowsamps, "\n")
     
-    
+
     #Adjust l for the number of groups at each hierarchical level. If only one group at a certain level, reduce l by 1. If the same number at two levels, then reduce l by 1
     if(l==3 && length(unique(sp[[l3]]))==1){l<-2}
     if(l==2 && length(unique(sp[[l2]]))==1){l<-1}
@@ -514,7 +514,7 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
     
     if(l==3){sp<-sp[!(is.na(sp[[l3]])),]} # remove any individuals that have NAs for level3
     # or possibly keep them in "other?"
-    
+
     #FORMAT CONVERSION
     cat("converting data to various R DNA formats", "\n")
     #convert to seqinr alignment (need to specify that we are using the as.alignment() function from seqinr rather than ape)
@@ -522,7 +522,7 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
     
     #convert to ape DNAbin format (ape)
     spseqsbin<-as.DNAbin(spseqs)
-    
+
     
     
     #HEIRARCHICAL DIFFERENTIATION STATS CALCULATION
@@ -532,7 +532,7 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
     #Calculate distances among individuals for PhiST. Need to write it to the global environment, because that is where pegas::amova() will look for it
     #change dists to all 1's if Fst is requested (model = "none")
     if(model=="none"){dists<<-dist.dna(spseqsbin, model="N"); .GlobalEnv$dists[.GlobalEnv$dists>0]<-1} else{dists<<-dist.dna(spseqsbin, model=model)}
-    
+   
     # add evolutionary distance along a tree?
     
     #1 level AMOVA
@@ -544,7 +544,7 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
       diffs<-list("raw_amova_output"=amova_out,"level1_names"=levels(level1factor),"FST"=FST)
       
       rm(dists, level1factor, envir=.GlobalEnv)
-    }
+   }
     
     #2 level AMOVA (per Arlequin 3.5 manual)
     if(l==2){
@@ -555,7 +555,7 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
       
       FCT<-amova_out$varcomp[1,1]/sum(amova_out$varcomp[,1])
       FCTp<-amova_out$varcomp[1,2]
-      
+     
       FSC<-amova_out$varcomp[2,1]/(amova_out$varcomp[2,1]+amova_out$varcomp[3,1])
       FSCp<-amova_out$varcomp[2,2]
       
@@ -563,15 +563,15 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
       FSTp<-NA
       
       diffs<-list("raw_amova_output"=amova_out,"level2_names"=levels(level2factor), "level1_names"=levels(level1factor), "FCT"=FCT, "FSC"=FSC,"FST"=FST)
-      # if(round((1-FST),digits=4) != round((1-FSC)*(1-FCT),digits = 4)){warning("Variance components don't meet expectation of (1-FST)==(1-FSC)*(1-FCT) for ", gsl)}
-      
+     # if(round((1-FST),digits=4) != round((1-FSC)*(1-FCT),digits = 4)){warning("Variance components don't meet expectation of (1-FST)==(1-FSC)*(1-FCT) for ", gsl)}
+    
       rm(dists, level1factor, level2factor, envir=.GlobalEnv)
     }
     
-    
+  
     #3 level AMOVA
     if(l==3){
-      
+    
       level1factor<<-as.factor(sp[[l1]])
       level2factor<<-as.factor(sp[[l2]])
       level3factor<<-as.factor(sp[[l3]])
@@ -592,13 +592,13 @@ hierarchical.structure.mtDNA.db<-function(ipdb=ipdb, level1=NULL, level2=NULL, l
       
       diffs<-list("raw_amova_output"=amova_out,"level3_names"=levels(level3factor),"level2_names"=levels(level2factor), "level1_names"=levels(level1factor), "FRT"=FRT, "FCR"=FCR,"FSC"=FSC, "FST"=FST)
       #if(round((1-FST),digits=4) != round((1-FSC)*(1-FCR)*(1-FRT),digits = 4)){warning("Variance components don't meet expectation of (1-FST)==(1-FSC)*(1-FCT) for ", gsl)}
-      
+   
       rm(dists, level1factor, level2factor, level3factor, envir=.GlobalEnv) 
     }
     
     #change this
     all.pops.table[[gsl]]<-diffs
-    
+  
     
   }
   
@@ -630,7 +630,7 @@ shannon.wiener.d<-function (x, truenames = TRUE)
 
 
 uncorrected.diversity<-function (x){ 
-  #adapted from diversity() in StrataG
+#adapted from diversity() in StrataG
   if (!(is.vector(x) | is.factor(x))) 
     stop("'x' must be a character or numeric vector, or a factor")
   x <- na.omit(x)
@@ -722,7 +722,7 @@ write.stats<-function(x=divstats,filename=NULL,structure=F){
     open(outfile,open="a")
     writeLines(paste("\n",gsl,sep=""),outfile,sep="\n")
     if(structure){write.table(dm, file=outfile, sep=",",append=T, quote=F, col.names=NA, row.names=T, na="")} else
-    {write.table(dm, file=outfile, sep=",",append=T, quote=F, col.names=T, row.names=F, na="")}
+      {write.table(dm, file=outfile, sep=",",append=T, quote=F, col.names=T, row.names=F, na="")}
   }
   close(outfile)
 }
@@ -740,7 +740,7 @@ summarize_AMOVA<-function(amova_list=amova_list,hypotheses="My_Hypothesis", keep
     len<-length(names(amova_list[[h]]))
     stat.table<-data.frame(row.names=names(amova_list[[h]]),level1_k=integer(len),level2_k=integer(len),FCT=numeric(len),FSC=numeric(len),FST=numeric(len),level2_SSD=numeric(len),level1_SSD=numeric(len),error_SSD=numeric(len),total_SSD=numeric(len),level2_MSD=numeric(len),level1_MSD=numeric(len),error_MSD=numeric(len),total_MSD=numeric(len),level2_df=numeric(len),level1_df=numeric(len),error_df=numeric(len),total_df=numeric(len),level2_sigma2=numeric(len),level1_sigma2=numeric(len),error_sigma2=numeric(len),p_level2=numeric(len),p_level1=numeric(len), BIC=numeric(len), AIC=numeric(len))
     
-    
+
     
     for(gsl in specieslist){ #fix this later!
       # loop through all the gsls pulling out various stats from each one into a data table
